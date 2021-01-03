@@ -1,0 +1,409 @@
+//C++ Assignment 5 by Sahil Kewlani
+//Read the description below.
+#include <iostream>
+#include <vector>
+#include <list>
+#include <map>
+#include <functional>
+#include <algorithm>
+using namespace std;
+
+int Count(list<int> L, function< bool(int)> f)
+{
+	int count = 0;
+	for (auto i : L)
+	{
+		if (f(i))
+			count++;
+	}
+	return count;
+}
+
+class evencount {
+public:
+	bool operator()(int i) {
+		return ((i % 2 == 0) ? true : false);
+	}
+};
+
+bool Odd(int i)
+{
+	return ((i % 2 == 0) ? false : true);
+}
+bool Even(int i)
+{
+	evencount temp;
+	return temp(i);
+}
+bool Three(int i)
+{
+	auto check = [](int i) {if (i % 3 == 0) return true; else return false; };
+	return check(i);
+}
+class myCompare1 {
+public:
+	bool operator()(list<int*>* a, list<int*>* b) const {
+		list<int*>::iterator it1 = a->begin();
+		int sum1 = 0;
+		while (it1 != a->end())
+		{
+			sum1 += **it1;
+			it1++;
+		}
+		list<int*>::iterator it2 = b->begin();
+		int sum2 = 0;
+		while (it2 != b->end())
+		{
+			sum2 += **it2;
+			it2++;
+		}
+
+		return sum1 < sum2;
+
+
+
+	}
+};
+
+class myCompare2 {
+public:
+	bool operator()(map <list<int*>*, vector<int*>, myCompare1> M1, map <list<int*>*, vector<int*>, myCompare1> M2) const
+	{
+		map<list<int*>*, vector<int*>>::iterator it1 = M1.begin();
+		int sum1 = 0;
+		while (it1 != M1.end())
+		{
+			list<int*>* a = it1->first;
+			auto lit1 = a->begin();
+			while (lit1 != a->end())
+			{
+				sum1 += **lit1;
+				lit1++;
+			}
+			vector<int*> b = it1->second;
+			auto vit1 = b.begin();
+			while (vit1 != b.end())
+			{
+				sum1 += **vit1;
+				vit1++;
+			}
+			it1++;
+
+
+		}
+		map<list<int*>*, vector<int*>>::iterator it2 = M2.begin();
+		int sum2 = 0;
+		while (it2 != M2.end())
+		{
+			list<int*>* a = it2->first;
+			auto lit2 = a->begin();
+			while (lit2 != a->end())
+			{
+				sum2 += **lit2;
+				lit2++;
+			}
+			vector<int*> b = it2->second;
+			auto vit2 = b.begin();
+			while (vit2 != b.end())
+			{
+				sum2 += **vit2;
+				vit2++;
+			}
+			it2++;
+
+
+		}
+		return sum1 < sum2;
+	}
+};	ostream& operator<<(ostream& str, map<map<list<int*>*, vector<int*>, myCompare1>, int, myCompare2> M1) 
+{
+		str << "{ ";
+		auto mit1 = M1.begin();
+		while (mit1 != M1.end())
+		{
+			map < list<int*>*, vector<int*>, myCompare1> a = mit1->first;
+			auto mit2 = a.begin();
+			str << "{ ";
+			while (mit2 != a.end())
+			{
+				list<int*>* aa = mit2->first;
+				str << "( ";
+				auto lit1 = aa->begin();
+				while (lit1 != aa->end())
+				{
+					str << **lit1 << " ";
+					lit1++;
+				}
+				str << ") ";
+				
+				vector<int*> b = mit2->second;
+				auto vit1 = b.begin();
+				str << "[ ";
+				while (vit1 != b.end())
+				{
+					str << **vit1 << " ";
+					vit1++;
+				}
+				str << "] ";
+				mit2++;
+			}
+			str << "}";
+			str << " " << mit1->second << " ";
+			mit1++;
+
+			
+
+
+		}
+		str<<"}";
+		
+		return str;
+	}
+
+ostream& operator<<(ostream& str, list<map < list<int*>*, vector<int*>, myCompare1 >> M1)
+{
+	str << "( ";
+	auto mit1 = M1.begin();
+	while (mit1 != M1.end())
+	{
+		map < list<int*>*, vector<int*>, myCompare1> a = *mit1;
+		auto mit2 = a.begin();
+		str << "{ ";
+		while (mit2 != a.end())
+		{
+			list<int*>* aa = mit2->first;
+			str << "( ";
+			auto lit1 = aa->begin();
+			while (lit1 != aa->end())
+			{
+				str << **lit1 << " ";
+				lit1++;
+			}
+			str << ") ";
+
+			vector<int*> b = mit2->second;
+			auto vit1 = b.begin();
+			str << "[ ";
+			while (vit1 != b.end())
+			{
+				str << **vit1 << " ";
+				vit1++;
+			}
+			str << "] ";
+			mit2++;
+		}
+		str << "} ";
+		mit1++;
+
+
+
+
+	}
+	str << ")";
+
+	return str;
+}
+
+bool sort1(map < list<int*>*, vector<int*>, myCompare1 > M1, map < list<int*>*, vector<int*>, myCompare1 >M2) {
+	map<list<int*>*, vector<int*>>::iterator it1 = M1.begin();
+	int sum1 = 0;
+	while (it1 != M1.end())
+	{
+		list<int*>* a = it1->first;
+		auto lit1 = a->begin();
+		while (lit1 != a->end())
+		{
+			sum1 += **lit1;
+			lit1++;
+		}
+		vector<int*> b = it1->second;
+		auto vit1 = b.begin();
+		while (vit1 != b.end())
+		{
+			sum1 += **vit1;
+			vit1++;
+		}
+		it1++;
+
+
+	}
+	map<list<int*>*, vector<int*>>::iterator it2 = M2.begin();
+	int sum2 = 0;
+	while (it2 != M2.end())
+	{
+		list<int*>* a = it2->first;
+		auto lit2 = a->begin();
+		while (lit2 != a->end())
+		{
+			sum2 += **lit2;
+			lit2++;
+		}
+		vector<int*> b = it2->second;
+		auto vit2 = b.begin();
+		while (vit2 != b.end())
+		{
+			sum2 += **vit2;
+			vit2++;
+		}
+		it2++;
+
+
+	}
+	return sum1 < sum2;
+}
+bool sort2(map < list<int*>*, vector<int*>, myCompare1 > M1, map < list<int*>*, vector<int*>, myCompare1 >M2)
+{
+	myCompare2 f1;
+	return f1(M1, M2);
+}
+int sum1(map < list<int*>*, vector<int*>, myCompare1 > M1) {
+	map<list<int*>*, vector<int*>>::iterator it1 = M1.begin();
+	int sum1 = 0;
+	while (it1 != M1.end())
+	{
+		list<int*>* a = it1->first;
+		auto lit1 = a->begin();
+		while (lit1 != a->end())
+		{
+			sum1 += **lit1;
+			lit1++;
+		}
+		vector<int*> b = it1->second;
+		auto vit1 = b.begin();
+		while (vit1 != b.end())
+		{
+			sum1 += **vit1;
+			vit1++;
+		}
+		it1++;
+
+
+	}
+	return sum1;
+}
+int main() {
+	/*
+	Write 4 functions: Count, Odd, Even, and Three.
+	The second argument for Count is function Odd, Even, or Three.
+	It will count, in the list,  the number of odd elements,
+	the number of even elements, or the number of multiples of 3 in the list.
+	Count, and Odd are required to be implemented using regular function.
+	Even is required to be implemented using functor.
+	Three is required to be implemented using lambda
+	*/
+	list<int> L0{ 14,7,2,6,9,5,8,2,13};
+	cout << Count(L0, Odd) << endl;
+	cout << Count(L0, Even) << endl;
+	cout << Count(L0, Three) << endl;
+	cout << endl;
+	/*
+	Remember that map will always sort elements by comparing the first part of each element (i.e., the key part).
+	Implement classes, myCompare1 and myCompare2, to allow the following map declaration to work.
+	In both classes, when comparing two keys, count the sums of all int values at all levels, and compare the sums.
+	*/
+	map<map<list<int*>*, vector<int*>, myCompare1>, int, myCompare2> M1
+	{
+
+		{   {
+				{ new list<int*>{new int{10}, new int{20}, new int{30} }   , {new int{20}, new int{40}}   },
+				{ new list<int*>{new int{40}, new int{20}, new int{30} }   , {new int{20}, new int{40}, new int{100}}   }
+			} , 50
+		},
+
+
+		{	{
+				{ new list<int*>{new int{10}, new int{20}, new int{30} }   , {new int{20}, new int{40}}   },
+				{ new list<int*>{new int{40}, new int{20}, new int{30} }   , {new int{20}, new int{40}, new int{200}}   }
+			} , 100
+		}
+
+
+
+	};
+	cout << M1 << endl;
+	cout << endl;
+	/*
+	For the following, implement the functions used
+	in sorting the list elements using regular funciton, functor, and lambda in the three cases.
+	Similar to the case of map, we will compare the sums of int values at all levels.
+	In addition, you need to implement the needed overloaded operator<< to supporting the printing.
+	*/
+	list<map < list<int*>*, vector<int*>, myCompare1 >> L1{ {
+				{
+					new list<int*>{new int{10}, new int{20}, new int{30} } ,
+					{new int{20}, new int{400}}
+				},
+
+				{
+					new list<int*>{new int{40}, new int{20}, new int{30} }   ,
+					{new int{20}, new int{40}, new int{100}}
+				}
+		} , {
+				{
+					new list<int*>{new int{10}, new int{20}, new int{30} } ,
+					{new int{20}, new int{40}}
+				},
+
+				{
+					new list<int*>{new int{40}, new int{20}, new int{30} }   ,
+					{new int{20}, new int{40}, new int{200}}
+				}
+	} };
+	cout << L1 << endl;
+	L1.sort(sort1);//???: use a regular function
+	cout << L1 << endl;
+	cout << endl;
+	list<map < list<int*>*, vector<int*>, myCompare1 >> L2{ {
+				{
+					new list<int*>{new int{10}, new int{20}, new int{30} } ,
+					{new int{20}, new int{400}}
+				},
+
+				{
+					new list<int*>{new int{40}, new int{20}, new int{30} }   ,
+					{new int{20}, new int{40}, new int{100}}
+				}
+		} , {
+				{
+					new list<int*>{new int{10}, new int{20}, new int{30} } ,
+					{new int{20}, new int{40}}
+				},
+
+				{
+					new list<int*>{new int{40}, new int{20}, new int{30} }   ,
+					{new int{20}, new int{40}, new int{200}}
+				}
+	} };
+
+	cout << L2 << endl;
+	L2.sort(sort2);//???: use a functor 
+	cout << L2 << endl;
+	cout << endl;
+	list<map < list<int*>*, vector<int*>, myCompare1 >> L3{ {
+					{
+						new list<int*>{new int{10}, new int{20}, new int{30} } ,
+						{new int{20}, new int{400}}
+					},
+
+					{
+						new list<int*>{new int{40}, new int{20}, new int{30} }   ,
+						{new int{20}, new int{40}, new int{100}}
+					}
+		} , {
+					{
+						new list<int*>{new int{10}, new int{20}, new int{30} } ,
+						{new int{20}, new int{40}}
+					},
+
+					{
+						new list<int*>{new int{40}, new int{20}, new int{30} }   ,
+						{new int{20}, new int{40}, new int{200}}
+					}
+	} };
+
+	cout << L3 << endl;
+	L3.sort([](map < list<int*>*, vector<int*>, myCompare1 > M1, map < list<int*>*, vector<int*>, myCompare1 >M2) {return sum1(M1) < sum1(M2); });//???: use a lambda 
+	cout << L3 << endl;
+
+	return 0;
+}

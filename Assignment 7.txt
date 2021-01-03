@@ -1,0 +1,324 @@
+//C++ Assignment 7 by Sahil Kewlani
+#include <iostream>
+#include <vector>
+#include <unordered_map>
+#include <map>
+
+using namespace std;
+
+class my_hash1 {
+	//implement h(sum of all matrix elements);
+public:
+	size_t operator()(const vector<vector<int>>& v) const {
+		hash<int> h;
+		int sum = 0;
+		for (auto it1 = v.begin(); it1 != v.end(); it1++)
+		{
+			for (auto it2 = (*it1).begin(); it2 != (*it1).end(); it2++)
+			{
+				sum += (*it2);
+			}
+		}
+		return h(sum);
+	}
+
+};
+
+class my_equal_to1 {
+public:
+	//equal sums and equal number of rows and equal number of columns
+	bool operator() (const vector<vector<int>>& v1, const vector<vector<int>>& v2) const {
+		int sum1 = 0;
+		int c1 = 0;
+		int r1 = 0;
+		for (auto it1 = v1.begin(); it1 != v1.end(); it1++)
+		{
+			r1++;
+			for (auto it2 = (*it1).begin(); it2 != (*it1).end(); it2++)
+			{
+				if (it1 == v1.begin())
+					c1++;
+				sum1 += (*it2);
+			}
+		}
+
+
+
+		int sum2 = 0;
+		int c2 = 0;
+		int r2 = 0;
+		for (auto it1 = v2.begin(); it1 != v2.end(); it1++)
+		{
+			r2++;
+			for (auto it2 = (*it1).begin(); it2 != (*it1).end(); it2++)
+			{
+				if (it1 == v2.begin())
+					c2++;
+				sum2 += (*it2);
+			}
+		}
+		return ((sum1 == sum2) && (c1 == c2) && (r1 == r2));
+	}
+
+};
+
+
+class myCompare1 {
+	//compare sums;
+public:
+	bool operator()(const list<int*>* a, const list<int*>* b) const {
+		
+		int sum1 = 0;
+		int sum2 = 0;
+		for (auto it1 = (*a).begin();it1!=(*a).end();it1++) {
+			sum1 += (**it1);
+		
+		}
+		for (auto it2 = (*b).begin(); it2 != (*b).end(); it2++) {
+			sum2 += (**it2);
+		
+		}
+		return sum1 < sum2;
+	}
+	
+};
+
+class my_hash2 {
+	//implement h(sum of all ints);
+public:
+	size_t operator()(const map<list<int*>*, vector<int*>, myCompare1>& m1) const {
+		hash<int> h;
+		int sum = 0;
+		for (auto it1 = m1.begin(); it1 != m1.end(); it1++)
+		{
+			list<int*>* l1 = it1->first;
+			for (auto it2 = (*l1).begin(); it2 != (*l1).end(); it2++)
+			{
+				sum += (**it2);
+			}
+
+			vector<int*> v1 = it1->second;
+			for (auto it2 = v1.begin(); it2 != v1.end(); it2++)
+			{
+				sum += (**it2);
+			}
+		}
+		return h(sum);
+	}
+};
+
+class my_equal_to2 {
+	//equal sums 
+public:
+	bool operator()(const map<list<int*>*, vector<int*>, myCompare1>& m1, const map<list<int*>*, vector<int*>, myCompare1>& m2) const {
+		int sum1 = 0;
+		int sum2 = 0;
+		for (auto it1 = m1.begin(); it1 != m1.end(); it1++)
+		{
+			list<int*>* l1 = it1->first;
+			for (auto it2 = (*l1).begin(); it2 != (*l1).end(); it2++)
+			{
+				sum1 += (**it2);
+			}
+
+			vector<int*> v1 = it1->second;
+			for (auto it2 = v1.begin(); it2 != v1.end(); it2++)
+			{
+				sum1 += (**it2);
+			}
+		}
+		for (auto it1 = m2.begin(); it1 != m2.end(); it1++)
+		{
+			list<int*>* l1 = it1->first;
+			for (auto it2 = (*l1).begin(); it2 != (*l1).end(); it2++)
+			{
+				sum2 += (**it2);
+			}
+
+			vector<int*> v1 = it1->second;
+			for (auto it2 = v1.begin(); it2 != v1.end(); it2++)
+			{
+				sum2 += (**it2);
+			}
+		}
+		return (sum1 == sum2);
+	
+	}
+};
+
+
+ostream& operator<<(ostream& str, const unordered_map<vector<vector<int>>, int, my_hash1, my_equal_to1>& m1)
+{
+	
+	for (auto it1 = m1.begin(); it1 != m1.end(); it1++)
+	{
+		auto v1 = it1->first;
+		for (auto it2 = v1.begin(); it2 != v1.end(); it2++)
+		{
+			for (auto it3 = (*it2).begin(); it3 != (*it2).end(); it3++)
+			{
+				str << (*it3) << " ";
+			}
+			str << endl;
+		}
+		str << it1->second << endl;
+	}
+
+	return str;
+
+}
+
+ostream& operator <<(ostream& str, unordered_map<map<list<int*>*, vector<int*>, myCompare1>, int, my_hash2, my_equal_to2>& m1)
+{
+
+	str << "{ ";
+	for (auto it1 = m1.begin(); it1 != m1.end(); it1++)
+	{
+		str << "[ ";
+		auto m2 = it1->first;
+		for (auto it2 = m2.begin(); it2 != m2.end();it2++) {
+			auto l1 = it2->first;
+			str << "< ";
+			for (auto it3 = (*l1).begin(); it3 != (*l1).end(); it3++) {
+				str << (**it3) << " ";
+			
+			
+			}
+			str << "> ";
+			auto v1 = it2->second;
+			str << "( ";
+			for (auto it3 = v1.begin(); it3 != v1.end(); it3++)
+			{
+				str << (**it3) << " ";
+			}
+			str << ") ";
+		
+		}
+		str << "] ";
+		str << it1->second << " ";
+
+
+	}
+
+	str << "}";
+
+	return str;
+}
+
+ostream& operator<<(ostream& str, const pair<map<list<int*>*, vector<int*>, myCompare1>, int>& p1) {
+
+	str << "[ ";
+	auto m1 = p1.first;
+	for (auto it1 = m1.begin(); it1 != m1.end(); it1++)
+	{
+		auto l1 = it1->first;
+		str << "< ";
+		for (auto it2 = (*l1).begin(); it2 != (*l1).end(); it2++)
+		{
+			str << (**it2) << " ";
+		}
+		str << "> ";
+		auto v1 = it1->second;
+		str << "( ";
+		for (auto it2 = v1.begin(); it2 != v1.end(); it2++)
+		{
+			str << (**it2) << " ";
+		}
+		str << ") ";
+	}
+	str << "] " << p1.second;
+	return str;
+
+}
+
+ostream& operator <<(ostream& str, const pair< vector<vector<int>>, int>& p1)
+{
+	auto v1 = p1.first;
+	for (auto it1 = v1.begin(); it1 != v1.end(); it1++)
+	{
+		for (auto it2 = (*it1).begin(); it2 != (*it1).end(); it2++)
+		{
+			str << (*it2) << " ";
+		}
+		str << endl;
+	}
+	str << p1.second<<endl;
+
+
+	return str;
+}
+
+int main() {
+	int n;
+	cin >> n; //input number matrices
+	vector<vector<vector<int>>> M(n);
+
+	//Do something here
+	//Create matrices for M[0] ... M[n-1]
+	//For each matrix, row number is a random number in 10 ... 30, column number is
+	//also a random number in 10 ... 30.
+	//For all matrices, elements are random numbers in 0 ... 99.
+	for (int i = 0; i < n; i++)
+	{
+		int r = static_cast<int>(10 + (rand() % 20));
+		int c = static_cast<int>(10 + (rand() % 20));
+		vector<vector<int>> temp1(r);
+		
+		for (int j = 0; j < r; j++)
+		{
+			
+			vector<int> temp2(c);
+			
+			for (int k = 0; k < c; k++)
+			{
+				temp2[k] = static_cast<int>(rand() % 99);
+			}
+			temp1[j] = temp2;
+		}
+		M[i] = temp1;
+	}
+
+
+
+
+	unordered_map<vector<vector<int>>, int, my_hash1, my_equal_to1> HT1;
+	for (int i = 0; i < n; i++) {
+		HT1.insert({ M[i], 1 + rand() % n });
+	}
+	//Implement needed overloaded operator<<
+	cout << HT1 << endl;
+
+	//Implement need overloaded operator<<
+	auto it = HT1.find(M[n - 1]);
+	if (it != HT1.end()) {
+		cout << (*it) << endl;
+	}
+	
+	unordered_map<map<list<int*>*, vector<int*>, myCompare1>, int, my_hash2, my_equal_to2> HT2;
+	//myCompare1 will compare the sums of all ints in keys
+	//my_hash2 will be h(sums of all ints)
+	//my_equal_to2 will be equal in sums of keys
+
+	map<list<int*>*, vector<int*>, myCompare1>
+		m1{ {
+				{ new list<int*>{new int{10}, new int{20}, new int{30} }   , {new int{20}, new int{40}}   },
+				{ new list<int*>{new int{40}, new int{20}, new int{30} }   , {new int{20}, new int{40}, new int{100}}   }
+			} },
+		m2{ {
+				{ new list<int*>{new int{10}, new int{20}, new int{30} }   , {new int{20}, new int{40}}   },
+				{ new list<int*>{new int{40}, new int{20}, new int{30} }   , {new int{20}, new int{40}, new int{200}}   }
+			} };
+
+
+	HT2.insert({ m1, 1 });
+	HT2.insert({ m2, 2 });
+
+	//Implement needed overloaded operator<<
+	cout << HT2 << endl;
+	auto it2 = HT2.find(m1);
+
+	//Implement needed overloaded operator<<
+	if (it2 != HT2.end())  cout << *it2 << endl;
+
+	return 0;
+}

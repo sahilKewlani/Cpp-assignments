@@ -1,0 +1,160 @@
+//C++ Assignment 1 by Sahil Kewlani
+//Implement the three member functions new_reverse, new_sort and removeAll.
+
+//Linked List Operations
+#include <iostream>//cin and cout
+using namespace std;
+class Node {
+public:
+	int value;
+	Node* next;
+	Node() { next = nullptr; }//default constructor
+	Node(int i) { value = i; next = nullptr; }//constructor
+
+};
+
+class LinkedList {
+public:
+	Node* head;
+	LinkedList() { head = nullptr; }
+	void makeList(int m, int n);//create a linked list of m nodes with 
+	//values randomly distrubuted in 0..n-1
+	void printList();
+	void new_reverse(); //You are only allowed to modify "values" of nodes, but not "next"
+	//You have to directly work on the linked list.  You are not allowed to use
+	//external structures such as array or linked list to perform operations.
+
+	void new_sort();//Sorting -- Only modify pointers (next or temporary pointers).
+	//Changes of values of nodes are not allowed.
+	//You are not allowed to use external structures such as array or linked list
+	//to perform operations and transfer the values back to the linked list.
+
+	void removeAll(int k);//Remove all nodes with value k
+};
+void LinkedList::makeList(int m, int n) {
+	for (int i = 0; i < m; i++) {
+		Node* p = new Node(rand() % n);
+		p->next = head;
+		head = p;
+	}
+}
+
+void LinkedList::printList() {
+	Node* p = head;
+	cout << endl;
+	while (p) { cout << p->value << " ";  p = p->next; }
+}
+
+void LinkedList::new_reverse() {
+	if (!head || !head->next) return;
+	Node* p1 = head, * p2, * p3;
+	Node* lastelem = nullptr;
+	
+	while (p1->next!=lastelem) {
+		p2 = p1;
+		p3 = p2->next;
+		while (p3 != lastelem)
+		{
+			int temp = p2->value;
+			p2->value = p3->value;
+			p3->value = temp;
+			p2 = p2->next;
+			p3 = p3->next;
+		}
+		lastelem = p2;
+
+	}
+	head = p1;
+	
+}
+void LinkedList::new_sort() {
+	if (!head || !head->next) return;
+	Node* p1 = head, * p2,* prev_p2, * prev_p1=new Node(-1);
+	int min, count=0;
+	Node* p_min,* prev_pmin=new Node(-1);
+	prev_p1->next = p1;
+	while (p1) {
+		min = p1->value;
+		p_min = p1;
+		p2 = p1->next;
+		prev_p2 = p1;
+		while (p2) {
+			if (p2->value < min) {
+				prev_pmin = prev_p2;
+				min = p2->value;
+				p_min = p2;
+			}
+			p2 = p2->next;
+			prev_p2 = prev_p2->next;
+		}
+		if (p1->value != min)
+		{
+			if (p1 == prev_pmin)
+			{
+				Node* temp = p_min->next;
+				
+				prev_p1->next = p_min;
+				p_min->next = p1;
+				p1->next = temp;
+			}
+			else
+			{
+				Node* temp = p_min->next;
+				prev_pmin->next = p1;
+				p_min->next = p1->next;
+				prev_p1->next = p_min;
+				p1->next = temp;
+			}
+
+		}
+		if (count == 0)
+		{
+			head = p_min;
+			count++;
+		}
+		p1 = p_min->next;
+		prev_p1 = prev_p1->next;
+	}
+}
+
+void LinkedList::removeAll(int k) {
+	if (!head) return;
+	while(head != nullptr && head->value == k)
+		head = head->next;
+	Node* current = head;
+	Node* prev = new Node(-1);
+	prev->next = head;
+	while (current != nullptr)
+	{
+		if (current->value == k)
+		{
+			prev->next = current->next;
+			current = current->next;
+		}
+		else
+		{
+			prev = prev->next;
+			current = current->next;
+		}
+
+	}
+
+
+}
+
+//Different test cases will be used during grading
+//Need to pay special attention to bounary cases
+int main() {
+	LinkedList L1;
+	L1.makeList(50, 60);
+	L1.printList();
+	L1.new_reverse();
+	L1.printList();
+	L1.new_sort();
+	L1.printList();
+	L1.removeAll(4);
+	L1.printList();
+	return 0;
+}
+
+
